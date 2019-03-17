@@ -1,0 +1,82 @@
+package com.example.tms;
+
+import android.util.Log;
+
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CloudOperations {
+    public static String TAG = CloudOperations.class.getCanonicalName();
+    public static String OBJECT_ID = "objectId";
+    public static String ID = "id";
+    public static String FACILITY = "facility";
+    public static String FACILITY_TYPE = "facility_type";
+    public static String SPEED = "speed";
+    public static String COUNT = "count";
+    public static String TIMESTAMP = "timestamp";
+    public static String IS_SYNCED = "isSynced";
+    DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    public CloudOperations() {
+        Log.d(TAG, "CloudOperations: started");
+    }
+
+    public ArrayList<VolumeEntity> getAll() {
+        Log.d(TAG, "getAll: started");
+        ArrayList<VolumeEntity> volumeEntityArrayList = new ArrayList<>();
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("RAWDATA");
+        query.whereEqualTo(IS_SYNCED, false);
+        try {
+            List<ParseObject> result = query.find();
+            Log.d(TAG, "getAll: result size: " + result.size());
+            for( ParseObject object : result) {
+                VolumeEntity volumeEntity = new VolumeEntity();
+                volumeEntity.setObjectId(object.getObjectId());
+                volumeEntity.setId(object.getString(ID));
+                volumeEntity.setFacility(object.getString(FACILITY));
+                volumeEntity.setFacility_type(object.getString(FACILITY_TYPE));
+                volumeEntity.setSpeed((Double) object.getNumber(SPEED));
+                volumeEntity.setCount((Integer) object.getNumber(COUNT));
+                volumeEntity.setTimestamp(format.parse(object.getString(TIMESTAMP)));
+                volumeEntity.setSynced(object.getBoolean(IS_SYNCED));
+                volumeEntityArrayList.add(volumeEntity);
+            }
+            Log.d(TAG, "getAll: Retrieve finished");
+            boolean updateResult = updateSyncedRecords(result);
+            Log.d(TAG, "getAll: updateSyncedRecords = " + String.valueOf(updateResult));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.d(TAG, "getAll: Exception: " + e.getMessage());
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+            Log.d(TAG, "getAll: Exception: " + e.getMessage());
+        }
+        return volumeEntityArrayList;
+    }
+
+    private boolean updateSyncedRecords(List<ParseObject> objects) {
+        int failedOperations = 0;
+        Log.d(TAG, "updateSyncedRecords: starting");
+        for ( ParseObject object : objects ) {
+            object.put(IS_SYNCED, true);
+            try {
+                object.save();
+                Log.d(TAG, "updateSyncedRecords: " + object.getObjectId());
+            } catch (ParseException e) {
+                e.printStackTrace();
+                failedOperations++;
+                Log.d(TAG, "updateSyncedRecords: " + e.getMessage());
+            }
+        }
+        Log.d(TAG, "updateSyncedRecords: failed: " + String.valueOf(failedOperations) );
+        return failedOperations == 0 ? true : false;
+    }
+
+}
