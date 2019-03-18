@@ -50,6 +50,9 @@ public class VolumeFragment extends Fragment {
     SQLiteDatabase db;
     TrafficVolumeDAO trafficVolumeDAO;
     private static String[] PERIODS = {"All", "Last 7 days", "Last 30 days"};
+    ArrayList<VolumeReportEntity> reports;
+    ArrayList<DataPoint> yValue;
+    ArrayList<String> xValue;
     public VolumeFragment() {}
 
     @BindView(R.id.volume_spinner_period) BetterSpinner periodSpinner;
@@ -83,23 +86,43 @@ public class VolumeFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     Log.d(TAG, "onItemClick: " + (String)parent.getItemAtPosition(position));
-                    trafficVolumeDAO.getVolumeReport(Period.ALL);
-                } else if (position == 1) {
-                    Log.d(TAG, "onItemClick: " + (String)parent.getItemAtPosition(position));
-                    ArrayList<VolumeReportEntity> reports = trafficVolumeDAO.getVolumeReport(Period.LAST_7_DAYS);
-                    ArrayList<DataPoint> yValue = new ArrayList<>();
-                    ArrayList<String> xValue = new ArrayList<>();
+                    reports = trafficVolumeDAO.getVolumeReport(Period.ALL);
+                    yValue = new ArrayList<>();
+                    xValue = new ArrayList<>();
                     index = 0;
                     reports.size();
                     reports.forEach(report -> {
                         yValue.add(new DataPoint(index, report.getVolume()));
                         xValue.add(report.getDate());
-                        index += 5;
+                        index++;
+                    });
+                    initializeGraph(yValue, xValue);
+                } else if (position == 1) {
+                    Log.d(TAG, "onItemClick: " + (String)parent.getItemAtPosition(position));
+                    reports = trafficVolumeDAO.getVolumeReport(Period.LAST_7_DAYS);
+                    yValue = new ArrayList<>();
+                    xValue = new ArrayList<>();
+                    index = 0;
+                    reports.size();
+                    reports.forEach(report -> {
+                        yValue.add(new DataPoint(index, report.getVolume()));
+                        xValue.add(report.getDate());
+                        index++;
                     });
                     initializeGraph(yValue, xValue);
                 } else if (position == 2) {
                     Log.d(TAG, "onItemClick: " + (String)parent.getItemAtPosition(position));
-                    trafficVolumeDAO.getVolumeReport(Period.LAST_30_DAYS);
+                    reports = trafficVolumeDAO.getVolumeReport(Period.LAST_30_DAYS);
+                    yValue = new ArrayList<>();
+                    xValue = new ArrayList<>();
+                    index = 0;
+                    reports.size();
+                    reports.forEach(report -> {
+                        yValue.add(new DataPoint(index, report.getVolume()));
+                        xValue.add(report.getDate());
+                        index++;
+                    });
+                    initializeGraph(yValue, xValue);
                 }
             }
         };
