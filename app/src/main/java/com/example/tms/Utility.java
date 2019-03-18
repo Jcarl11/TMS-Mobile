@@ -17,4 +17,21 @@ public class Utility {
         return dialog;
     }
 
+    public static String getLevelOfService(double value) {
+        String los = "";
+        if (value >= 40)
+            los = "EXCELLENT";
+        else if (value >= 30 && value < 40)
+            los = "GOOD";
+        else if (value >= 20 && value < 30)
+            los = "FAIR";
+        else if (value >= 15 && value < 20)
+            los = "PASSED";
+        else if (value < 15)
+            los = "FAILED";
+        else
+            los = "INVALID";
+        return los;
+    }
+
 }

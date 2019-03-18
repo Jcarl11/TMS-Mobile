@@ -1,8 +1,10 @@
 package com.example.tms;
 
 import android.os.Bundle;
+
+import com.example.tms.Tasks.SyncTask;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+
 import android.view.View;
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.view.GravityCompat;
@@ -10,7 +12,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                VolumeFragment volumeFragment = (VolumeFragment)getSupportFragmentManager().findFragmentByTag(VOLUME_FRAGMENT);
+                /*VolumeFragment volumeFragment = (VolumeFragment)getSupportFragmentManager().findFragmentByTag(VOLUME_FRAGMENT);
                 LevelOfServiceFragment levelOfServiceFragment = (LevelOfServiceFragment)getSupportFragmentManager().findFragmentByTag(LVLOFSERIVICE_FRAGMENT);
                 AvgSpeedFragment avgSpeedFragment = (AvgSpeedFragment)getSupportFragmentManager().findFragmentByTag(AVGSPEED_FRAGMENT);
                 if(volumeFragment != null){
@@ -45,7 +46,8 @@ public class MainActivity extends AppCompatActivity
 
                 } else if(avgSpeedFragment != null){
 
-                }
+                }*/
+                new SyncTask(MainActivity.this).execute((Void)null);
 
             }
         });

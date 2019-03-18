@@ -1,9 +1,7 @@
 package com.example.tms.FragmentReports;
 
 
-import android.app.AlertDialog;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -18,28 +16,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
-import com.example.tms.CloudOperations;
 import com.example.tms.DatabaseHelper;
 import com.example.tms.Period;
 import com.example.tms.R;
-import com.example.tms.R2;
-import com.example.tms.SyncTask;
 import com.example.tms.TrafficVolumeDAO;
-import com.example.tms.Utility;
-import com.example.tms.VolumeEntity;
-import com.example.tms.VolumeReportEntity;
+import com.example.tms.Entities.VolumeReportEntity;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.LabelFormatter;
-import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.weiwangcn.betterspinner.library.BetterSpinner;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 /**
  * A simple {@link Fragment} subclass.

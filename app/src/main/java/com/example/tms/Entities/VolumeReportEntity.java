@@ -1,4 +1,4 @@
-package com.example.tms;
+package com.example.tms.Entities;
 
 public class VolumeReportEntity {
     private double volume;
