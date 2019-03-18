@@ -10,6 +10,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -20,7 +22,9 @@ import com.parse.Parse;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    private static final String VOLUME_FRAGMENT= "VOLUME_FRAGMENT";
+    private static final String LVLOFSERIVICE_FRAGMENT= "LVLOFSERIVICE_FRAGMENT";
+    private static final String AVGSPEED_FRAGMENT= "AVGSPEED_FRAGMENT";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,8 +36,17 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "TODO: Refresh UI", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                VolumeFragment volumeFragment = (VolumeFragment)getSupportFragmentManager().findFragmentByTag(VOLUME_FRAGMENT);
+                LevelOfServiceFragment levelOfServiceFragment = (LevelOfServiceFragment)getSupportFragmentManager().findFragmentByTag(LVLOFSERIVICE_FRAGMENT);
+                AvgSpeedFragment avgSpeedFragment = (AvgSpeedFragment)getSupportFragmentManager().findFragmentByTag(AVGSPEED_FRAGMENT);
+                if(volumeFragment != null){
+                    new SyncTask(MainActivity.this).execute((Void)null);
+                } else if(levelOfServiceFragment != null){
+
+                } else if(avgSpeedFragment != null){
+
+                }
+
             }
         });
 
@@ -87,11 +100,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_volume) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, new VolumeFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, new VolumeFragment(), VOLUME_FRAGMENT).commit();
         } else if (id == R.id.nav_lvl_of_service) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, new LevelOfServiceFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, new LevelOfServiceFragment(), LVLOFSERIVICE_FRAGMENT).commit();
         } else if (id == R.id.nav_avg_speed) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, new AvgSpeedFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, new AvgSpeedFragment(), AVGSPEED_FRAGMENT).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

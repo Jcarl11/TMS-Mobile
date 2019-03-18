@@ -2,8 +2,12 @@ package com.example.tms.FragmentReports;
 
 
 import android.app.AlertDialog;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,12 +22,17 @@ import android.widget.Toast;
 
 import com.example.tms.CloudOperations;
 import com.example.tms.DatabaseHelper;
+import com.example.tms.Period;
 import com.example.tms.R;
 import com.example.tms.R2;
 import com.example.tms.SyncTask;
+import com.example.tms.TrafficVolumeDAO;
 import com.example.tms.Utility;
 import com.example.tms.VolumeEntity;
+import com.example.tms.VolumeReportEntity;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.LabelFormatter;
+import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -37,6 +46,9 @@ import java.util.logging.Logger;
  */
 public class VolumeFragment extends Fragment {
     private static String TAG = VolumeFragment.class.getCanonicalName();
+    int index = 0;
+    SQLiteDatabase db;
+    TrafficVolumeDAO trafficVolumeDAO;
     private static String[] PERIODS = {"All", "Last 7 days", "Last 30 days"};
     public VolumeFragment() {}
 
@@ -50,9 +62,10 @@ public class VolumeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_volume, container, false);
         ButterKnife.bind(this, view);
+        db = new DatabaseHelper(getContext()).getWritableDatabase();
+        trafficVolumeDAO = new TrafficVolumeDAO(db);
         periodSpinner.setAdapter(spinnerAdapter());
         periodSpinner.setOnItemClickListener(spinnerListener());
-        initializeGraph();
         return view;
     }
     private ArrayAdapter spinnerAdapter(){
@@ -65,42 +78,53 @@ public class VolumeFragment extends Fragment {
 
     private AdapterView.OnItemClickListener spinnerListener(){
         AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     Log.d(TAG, "onItemClick: " + (String)parent.getItemAtPosition(position));
+                    trafficVolumeDAO.getVolumeReport(Period.ALL);
                 } else if (position == 1) {
                     Log.d(TAG, "onItemClick: " + (String)parent.getItemAtPosition(position));
-
+                    ArrayList<VolumeReportEntity> reports = trafficVolumeDAO.getVolumeReport(Period.LAST_7_DAYS);
+                    ArrayList<DataPoint> yValue = new ArrayList<>();
+                    ArrayList<String> xValue = new ArrayList<>();
+                    index = 0;
+                    reports.size();
+                    reports.forEach(report -> {
+                        yValue.add(new DataPoint(index, report.getVolume()));
+                        xValue.add(report.getDate());
+                        index += 5;
+                    });
+                    initializeGraph(yValue, xValue);
                 } else if (position == 2) {
                     Log.d(TAG, "onItemClick: " + (String)parent.getItemAtPosition(position));
+                    trafficVolumeDAO.getVolumeReport(Period.LAST_30_DAYS);
                 }
             }
         };
         return listener;
     }
 
-    private void initializeGraph(){
+    private void initializeGraph(ArrayList<DataPoint> yValues, ArrayList<String> xValues){
+        String[] xVal = new String[xValues.size()];
+        xVal = xValues.toArray(xVal);
+        DataPoint[] yVal = new DataPoint[yValues.size()];
+        yVal = yValues.toArray(yVal);
 
-        // activate horizontal scrolling
-        volume_graph.getViewport().setScrollable(true);
-        // activate horizontal and vertical zooming and scrolling
-
-        // activate vertical scrolling
-        volume_graph.getViewport().setScrollableY(true);
+        volume_graph.getViewport().setYAxisBoundsManual(true);
+        volume_graph.getViewport().setMinY(0);
+        volume_graph.getViewport().setMaxY(20);
 
         StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(volume_graph);
-        staticLabelsFormatter.setHorizontalLabels(new String[] {"Monday", "Tuesday", "Wednesday"});
+        staticLabelsFormatter.setHorizontalLabels(xVal);
+
         volume_graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
 
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6)
-        });
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(yVal);
+        series.setDrawDataPoints(true);
+        series.setDataPointsRadius(10);
         volume_graph.addSeries(series);
     }
 
