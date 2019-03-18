@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import com.example.tms.DatabaseHelper;
+import com.example.tms.InitializeGraph;
 import com.example.tms.Period;
 import com.example.tms.R;
 import com.example.tms.TrafficVolumeDAO;
@@ -42,11 +43,11 @@ public class VolumeFragment extends Fragment {
     ArrayList<VolumeReportEntity> reports;
     ArrayList<DataPoint> yValue;
     ArrayList<String> xValue;
+    InitializeGraph initializeGraph;
     public VolumeFragment() {}
 
     @BindView(R.id.volume_spinner_period) BetterSpinner periodSpinner;
-    @BindView(R.id.volume_graph)
-    GraphView volume_graph;
+    @BindView(R.id.volume_graph) GraphView volume_graph;
 
 
     @Override
@@ -58,6 +59,7 @@ public class VolumeFragment extends Fragment {
         trafficVolumeDAO = new TrafficVolumeDAO(db);
         periodSpinner.setAdapter(spinnerAdapter());
         periodSpinner.setOnItemClickListener(spinnerListener());
+        initializeGraph = new InitializeGraph(volume_graph);
         return view;
     }
     private ArrayAdapter spinnerAdapter(){
@@ -85,7 +87,9 @@ public class VolumeFragment extends Fragment {
                         xValue.add(report.getDate());
                         index++;
                     });
-                    initializeGraph(yValue, xValue);
+                    initializeGraph.setxAxisValues(xValue);
+                    initializeGraph.setyAxisValues(yValue);
+                    initializeGraph.initialize();
                 } else if (position == 1) {
                     Log.d(TAG, "onItemClick: " + (String)parent.getItemAtPosition(position));
                     reports = trafficVolumeDAO.getVolumeReport(Period.LAST_7_DAYS);
@@ -98,7 +102,9 @@ public class VolumeFragment extends Fragment {
                         xValue.add(report.getDate());
                         index++;
                     });
-                    initializeGraph(yValue, xValue);
+                    initializeGraph.setxAxisValues(xValue);
+                    initializeGraph.setyAxisValues(yValue);
+                    initializeGraph.initialize();
                 } else if (position == 2) {
                     Log.d(TAG, "onItemClick: " + (String)parent.getItemAtPosition(position));
                     reports = trafficVolumeDAO.getVolumeReport(Period.LAST_30_DAYS);
@@ -111,34 +117,13 @@ public class VolumeFragment extends Fragment {
                         xValue.add(report.getDate());
                         index++;
                     });
-                    initializeGraph(yValue, xValue);
+                    initializeGraph.setxAxisValues(xValue);
+                    initializeGraph.setyAxisValues(yValue);
+                    initializeGraph.initialize();
                 }
             }
         };
         return listener;
     }
-
-    private void initializeGraph(ArrayList<DataPoint> yValues, ArrayList<String> xValues){
-        String[] xVal = new String[xValues.size()];
-        xVal = xValues.toArray(xVal);
-        DataPoint[] yVal = new DataPoint[yValues.size()];
-        yVal = yValues.toArray(yVal);
-
-        volume_graph.getViewport().setYAxisBoundsManual(true);
-        volume_graph.getViewport().setMinY(0);
-        volume_graph.getViewport().setMaxY(20);
-
-        StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(volume_graph);
-        staticLabelsFormatter.setHorizontalLabels(xVal);
-
-        volume_graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
-
-
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(yVal);
-        series.setDrawDataPoints(true);
-        series.setDataPointsRadius(10);
-        volume_graph.addSeries(series);
-    }
-
 
 }
