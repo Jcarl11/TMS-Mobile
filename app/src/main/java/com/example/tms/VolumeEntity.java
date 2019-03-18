@@ -9,10 +9,12 @@ public class VolumeEntity {
     private String facility_type;
     private double speed;
     private double count;
-    private Date timestamp;
+    private String timestamp;
     private boolean isSynced;
 
-    public VolumeEntity(String objectId, String id, String facility, String facility_type, double speed, double count, Date timestamp, boolean isSynced) {
+    public VolumeEntity() {}
+
+    public VolumeEntity(String objectId, String id, String facility, String facility_type, double speed, double count, String timestamp, boolean isSynced) {
         this.objectId = objectId;
         this.id = id;
         this.facility = facility;
@@ -21,9 +23,6 @@ public class VolumeEntity {
         this.count = count;
         this.timestamp = timestamp;
         this.isSynced = isSynced;
-    }
-
-    public VolumeEntity() {
     }
 
     public String getObjectId() {
@@ -74,11 +73,11 @@ public class VolumeEntity {
         this.count = count;
     }
 
-    public Date getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 

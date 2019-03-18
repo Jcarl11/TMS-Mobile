@@ -14,10 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.example.tms.CloudOperations;
+import com.example.tms.DatabaseHelper;
 import com.example.tms.R;
 import com.example.tms.R2;
+import com.example.tms.SyncTask;
 import com.example.tms.Utility;
 import com.example.tms.VolumeEntity;
 import com.jjoe64.graphview.GraphView;
@@ -68,7 +71,7 @@ public class VolumeFragment extends Fragment {
                     Log.d(TAG, "onItemClick: " + (String)parent.getItemAtPosition(position));
                 } else if (position == 1) {
                     Log.d(TAG, "onItemClick: " + (String)parent.getItemAtPosition(position));
-                    new RetrieveCloudValues().execute((Void)null);
+
                 } else if (position == 2) {
                     Log.d(TAG, "onItemClick: " + (String)parent.getItemAtPosition(position));
                 }
@@ -101,37 +104,5 @@ public class VolumeFragment extends Fragment {
         volume_graph.addSeries(series);
     }
 
-    private class RetrieveCloudValues extends AsyncTask<Void, Void, ArrayList<VolumeEntity>> {
-        Utility utility = new Utility();
-        CloudOperations cloudOperations = new CloudOperations();
-        AlertDialog dialog;
-        public RetrieveCloudValues() {
-            Log.d(TAG, "RetrieveCloudValues: initialized");
-            dialog = utility.showLoading(getContext(), "Please wait", false);
-        }
-
-        @Override
-        protected ArrayList<VolumeEntity> doInBackground(Void... voids) {
-            Log.d(TAG, "doInBackground: running");
-            return cloudOperations.getAll();
-        }
-
-        @Override
-        protected void onPreExecute() {
-            Log.d(TAG, "onPreExecute: started");
-            dialog.show();
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<VolumeEntity> volumeEntities) {
-            Log.d(TAG, "onPostExecute: started");
-            dialog.dismiss();
-            if(volumeEntities.size() > 0) {
-                Log.d(TAG, "onPostExecute: volumeEntities = " + volumeEntities.size());
-            } else {
-                Log.d(TAG, "onPostExecute: volumeEntities: Empty");
-            }
-        }
-    }
 
 }

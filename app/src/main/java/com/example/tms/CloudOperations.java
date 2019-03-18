@@ -22,8 +22,8 @@ public class CloudOperations {
     public static String COUNT = "count";
     public static String TIMESTAMP = "timestamp";
     public static String IS_SYNCED = "isSynced";
-    DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
+    private boolean UNSYNCED = false;
+    private boolean SYNCED = true;
     public CloudOperations() {
         Log.d(TAG, "CloudOperations: started");
     }
@@ -32,7 +32,7 @@ public class CloudOperations {
         Log.d(TAG, "getAll: started");
         ArrayList<VolumeEntity> volumeEntityArrayList = new ArrayList<>();
         ParseQuery<ParseObject> query = ParseQuery.getQuery("RAWDATA");
-        query.whereEqualTo(IS_SYNCED, false);
+        query.whereEqualTo(IS_SYNCED, UNSYNCED);
         try {
             List<ParseObject> result = query.find();
             Log.d(TAG, "getAll: result size: " + result.size());
@@ -44,7 +44,9 @@ public class CloudOperations {
                 volumeEntity.setFacility_type(object.getString(FACILITY_TYPE));
                 volumeEntity.setSpeed((Double) object.getNumber(SPEED));
                 volumeEntity.setCount((Integer) object.getNumber(COUNT));
-                volumeEntity.setTimestamp(format.parse(object.getString(TIMESTAMP)));
+                volumeEntity.setTimestamp(object.getString(TIMESTAMP));
+
+                Log.d(TAG, "timestamp - " + volumeEntity.getTimestamp() );
                 volumeEntity.setSynced(object.getBoolean(IS_SYNCED));
                 volumeEntityArrayList.add(volumeEntity);
             }
@@ -52,9 +54,6 @@ public class CloudOperations {
             boolean updateResult = updateSyncedRecords(result);
             Log.d(TAG, "getAll: updateSyncedRecords = " + String.valueOf(updateResult));
         } catch (ParseException e) {
-            e.printStackTrace();
-            Log.d(TAG, "getAll: Exception: " + e.getMessage());
-        } catch (java.text.ParseException e) {
             e.printStackTrace();
             Log.d(TAG, "getAll: Exception: " + e.getMessage());
         }
@@ -65,10 +64,10 @@ public class CloudOperations {
         int failedOperations = 0;
         Log.d(TAG, "updateSyncedRecords: starting");
         for ( ParseObject object : objects ) {
-            object.put(IS_SYNCED, true);
+            object.put(IS_SYNCED, SYNCED);
             try {
                 object.save();
-                Log.d(TAG, "updateSyncedRecords: " + object.getObjectId());
+                Log.d(TAG, "updateSyncedRecords: " + object.getObjectId() );
             } catch (ParseException e) {
                 e.printStackTrace();
                 failedOperations++;
