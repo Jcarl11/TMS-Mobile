@@ -1,5 +1,7 @@
 package com.example.tms;
 
+import android.util.Log;
+
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
@@ -20,17 +22,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InitializeLineGraph {
-
+    private static String TAG = InitializeLineGraph.class.getCanonicalName();
     private AnyChartView chartView;
     private Cartesian cartesian;
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd");
     public InitializeLineGraph(AnyChartView chartView) {
         this.chartView = chartView;
-        cartesian = AnyChart.line();
     }
 
     public void initializeChart() {
-
+        cartesian = AnyChart.line();
+        cartesian.xScroller(true);
         cartesian.animation(true);
         cartesian.crosshair().enabled(true);
         cartesian.crosshair()
@@ -41,8 +43,9 @@ public class InitializeLineGraph {
     }
 
     public void displayData(ArrayList<VolumeReportEntity> data) {
+        Log.d(TAG, "displayData: started");
+        Log.d(TAG, "displayData: data size " + String.valueOf(data.size()));
         List<DataEntry> seriesData = new ArrayList<>();
-        DataEntry dataEntry = new DataEntry();
         for(VolumeReportEntity volumeReportEntity : data) {
             seriesData.add(new ValueDataEntry(volumeReportEntity.getDate(), volumeReportEntity.getVolume()));
         }
@@ -69,7 +72,6 @@ public class InitializeLineGraph {
 
     public void displayDataSpeed(ArrayList<AvgReportEntity> data) {
         List<DataEntry> seriesData = new ArrayList<>();
-        DataEntry dataEntry = new DataEntry();
         for(AvgReportEntity avgReportEntity : data) {
             seriesData.add(new ValueDataEntry(avgReportEntity.getDate(), avgReportEntity.getAvg()));
         }

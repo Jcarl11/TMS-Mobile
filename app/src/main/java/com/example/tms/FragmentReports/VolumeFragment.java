@@ -36,8 +36,7 @@ public class VolumeFragment extends Fragment {
     SQLiteDatabase db;
     TrafficVolumeDAO trafficVolumeDAO;
     private static String[] PERIODS = {"All", "Last 7 days", "Last 30 days"};
-    ArrayList<VolumeReportEntity> reports;
-    InitializeLineGraph initializeLineGraph;
+
     public VolumeFragment() {}
 
     @BindView(R.id.volume_spinner_period) BetterSpinner periodSpinner;
@@ -49,9 +48,7 @@ public class VolumeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_volume, container, false);
         ButterKnife.bind(this, view);
         Log.d(TAG, "onCreateView: Started");
-        db = new DatabaseHelper(getContext()).getWritableDatabase();
-        initializeLineGraph = new InitializeLineGraph(any_chart_view);
-        trafficVolumeDAO = new TrafficVolumeDAO(db);
+
         periodSpinner.setAdapter(spinnerAdapter());
         periodSpinner.setOnItemClickListener(spinnerListener());
         return view;
@@ -72,17 +69,26 @@ public class VolumeFragment extends Fragment {
                 Log.d(TAG, "onItemClick: Initalized");
                 if (position == 0) {
                     Log.d(TAG, "onItemClick: " + (String)parent.getItemAtPosition(position));
-                    reports = trafficVolumeDAO.getVolumeReport(Period.ALL);
+                    db = new DatabaseHelper(getContext()).getWritableDatabase();
+                    trafficVolumeDAO = new TrafficVolumeDAO(db);
+                    ArrayList<VolumeReportEntity> reports = trafficVolumeDAO.getVolumeReport(Period.ALL);
+                    InitializeLineGraph initializeLineGraph = new InitializeLineGraph(any_chart_view);
                     initializeLineGraph.initializeChart();
                     initializeLineGraph.displayData(reports);
                 } else if (position == 1) {
                     Log.d(TAG, "onItemClick: " + (String)parent.getItemAtPosition(position));
-                    reports = trafficVolumeDAO.getVolumeReport(Period.LAST_7_DAYS);
+                    db = new DatabaseHelper(getContext()).getWritableDatabase();
+                    trafficVolumeDAO = new TrafficVolumeDAO(db);
+                    ArrayList<VolumeReportEntity> reports = trafficVolumeDAO.getVolumeReport(Period.LAST_7_DAYS);
+                    InitializeLineGraph initializeLineGraph = new InitializeLineGraph(any_chart_view);
                     initializeLineGraph.initializeChart();
                     initializeLineGraph.displayData(reports);
                 } else if (position == 2) {
                     Log.d(TAG, "onItemClick: " + (String)parent.getItemAtPosition(position));
-                    reports = trafficVolumeDAO.getVolumeReport(Period.LAST_30_DAYS);
+                    db = new DatabaseHelper(getContext()).getWritableDatabase();
+                    trafficVolumeDAO = new TrafficVolumeDAO(db);
+                    ArrayList<VolumeReportEntity> reports = trafficVolumeDAO.getVolumeReport(Period.LAST_30_DAYS);
+                    InitializeLineGraph initializeLineGraph = new InitializeLineGraph(any_chart_view);
                     initializeLineGraph.initializeChart();
                     initializeLineGraph.displayData(reports);
                 }

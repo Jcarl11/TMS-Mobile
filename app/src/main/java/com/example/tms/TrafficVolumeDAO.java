@@ -45,7 +45,7 @@ public class TrafficVolumeDAO {
         ArrayList<VolumeReportEntity> volumeReportEntities = new ArrayList<>();
         Cursor cursor = db.rawQuery(command, null);
         if (cursor.getCount() > 0) {
-            Log.d(TAG, "getReport: cursor " + cursor.getCount());
+            Log.d(TAG, "getReport: cursor " + String.valueOf(cursor.getCount()));
             while(cursor.moveToNext()) {
                 Double volume = cursor.getDouble(0);
                 String date = cursor.getString(1);
@@ -55,6 +55,7 @@ public class TrafficVolumeDAO {
         } else {
             Log.d(TAG, "getReport: cursor Empty");
         }
+        Log.d(TAG, "getReport: volumeReportEntities size " + String.valueOf(volumeReportEntities.size()));
         return volumeReportEntities;
     }
 }

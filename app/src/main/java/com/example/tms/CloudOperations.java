@@ -31,7 +31,6 @@ public class CloudOperations {
         Log.d(TAG, "getAll: started");
         ArrayList<VolumeEntity> volumeEntityArrayList = new ArrayList<>();
         ParseQuery<ParseObject> query = ParseQuery.getQuery("RAWDATA");
-        query.whereEqualTo(IS_SYNCED, UNSYNCED);
         try {
             List<ParseObject> result = query.find();
             Log.d(TAG, "getAll: result size: " + result.size());
@@ -50,8 +49,8 @@ public class CloudOperations {
                 volumeEntityArrayList.add(volumeEntity);
             }
             Log.d(TAG, "getAll: Retrieve finished");
-            boolean updateResult = updateSyncedRecords(result);
-            Log.d(TAG, "getAll: updateSyncedRecords = " + String.valueOf(updateResult));
+            //boolean updateResult = updateSyncedRecords(result);
+            //Log.d(TAG, "getAll: updateSyncedRecords = " + String.valueOf(updateResult));
         } catch (ParseException e) {
             e.printStackTrace();
             Log.d(TAG, "getAll: Exception: " + e.getMessage());
