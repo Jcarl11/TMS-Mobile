@@ -14,10 +14,10 @@ public class TrafficSpeedDAO {
             "where timestamp between (SELECT DATETIME('now', '-7 day')) \n" +
             "and (SELECT date('now', '1 day')) \n" +
             "group by strftime('%m-%d', timestamp) order by timestamp asc";
-    private static final String COMMAND_LAST30DAYS = "select round(avg(SPEED), 2) AVG_SPEED, strftime('%m-%d', timestamp) DATE from rawdata\\n\" +\n" +
-            "            \"where timestamp between (SELECT DATETIME('now', '-30 day')) \\n\" +\n" +
-            "            \"and (SELECT date('now', '1 day')) \\n\" +\n" +
-            "            \"group by strftime('%m-%d', timestamp) order by timestamp asc";
+    private static final String COMMAND_LAST30DAYS = "select round(avg(SPEED), 2) AVG_SPEED, strftime('%m-%d', timestamp) DATE from rawdata\n" +
+            "where timestamp between (SELECT DATETIME('now', '-30 day')) \n" +
+            "and (SELECT date('now', '1 day')) \n" +
+            "group by strftime('%m-%d', timestamp) order by timestamp asc";
     private static final String COMMAND_ALL = "select round(avg(SPEED), 2) AVG_SPEED, strftime('%m-%d', timestamp) DATE from rawdata " +
             "group by strftime('%m-%d', timestamp) order by timestamp asc";
     SQLiteDatabase db;
