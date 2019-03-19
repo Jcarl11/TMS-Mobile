@@ -30,6 +30,7 @@ public class SyncTask extends AsyncTask<Void, Void, ArrayList<VolumeEntity>>{
     @Override
     protected ArrayList<VolumeEntity> doInBackground(Void... voids) {
         Log.d(TAG, "doInBackground: running");
+        databaseHelper.clearDB();
         return cloudOperations.getAll();
     }
 
