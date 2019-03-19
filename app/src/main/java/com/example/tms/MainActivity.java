@@ -33,22 +33,13 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         initializeParse();
+        if (savedInstanceState == null)
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, new WelcomeFragment()).commit();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*VolumeFragment volumeFragment = (VolumeFragment)getSupportFragmentManager().findFragmentByTag(VOLUME_FRAGMENT);
-                LevelOfServiceFragment levelOfServiceFragment = (LevelOfServiceFragment)getSupportFragmentManager().findFragmentByTag(LVLOFSERIVICE_FRAGMENT);
-                AvgSpeedFragment avgSpeedFragment = (AvgSpeedFragment)getSupportFragmentManager().findFragmentByTag(AVGSPEED_FRAGMENT);
-                if(volumeFragment != null){
-                    new SyncTask(MainActivity.this).execute((Void)null);
-                } else if(levelOfServiceFragment != null){
-
-                } else if(avgSpeedFragment != null){
-
-                }*/
                 new SyncTask(MainActivity.this).execute((Void)null);
-
             }
         });
 
