@@ -7,16 +7,14 @@
         <item
             android:id="@+id/nav_volume"
             android:icon="@drawable/ic_keyboard_arrow_right_black_24dp"
-            android:title="Volume" />
+            android:title="@string/volume" />
         <item
             android:id="@+id/nav_lvl_of_service"
             android:icon="@drawable/ic_keyboard_arrow_right_black_24dp"
-            android:title="Levels of service" />
+            android:title="@string/levels_of_service" />
         <item
             android:id="@+id/nav_avg_speed"
             android:icon="@drawable/ic_keyboard_arrow_right_black_24dp"
-            android:title="Average speed" />
+            android:title="@string/average_speed" />
     </group>
-
-
 </menu>

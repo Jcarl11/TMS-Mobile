@@ -15,6 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.tms.FragmentReports.AvgSpeedFragment;
 import com.example.tms.FragmentReports.LevelOfServiceFragment;
@@ -80,6 +81,14 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            DatabaseHelper databaseHelper = new DatabaseHelper(this);
+            boolean result = databaseHelper.clearDB();
+            Toast success = Toast.makeText(this, "Local storage cleared", Toast.LENGTH_SHORT);
+            Toast failed = Toast.makeText(this, "Operation failed", Toast.LENGTH_SHORT);
+            if(result)
+                success.show();
+            else
+                failed.show();
             return true;
         }
 

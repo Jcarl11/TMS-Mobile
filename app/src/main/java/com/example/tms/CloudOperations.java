@@ -21,8 +21,8 @@ public class CloudOperations {
     public static String COUNT = "count";
     public static String TIMESTAMP = "timestamp";
     public static String IS_SYNCED = "isSynced";
-    private boolean UNSYNCED = false;
-    private boolean SYNCED = true;
+    private boolean UNSYNCED = true;
+    private boolean SYNCED = false;
     public CloudOperations() {
         Log.d(TAG, "CloudOperations: started");
     }

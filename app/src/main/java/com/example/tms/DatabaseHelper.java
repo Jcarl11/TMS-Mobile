@@ -30,6 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "%s VARCHAR(20), " +
             "%s VARCHAR(20))";
     private static final String COMMAND_DROP = "DROP TABLE IF EXISTS %s";
+    SQLiteDatabase sqLiteDatabase;
     public DatabaseHelper(@Nullable Context context) {
         super(context, DB_NAME, null, 1);
         Log.d(TAG, "DatabaseHelper: Initialized");
@@ -60,7 +61,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean insertData(ArrayList<VolumeEntity> objects) {
         Log.d(TAG, "insertData: Started");
         long result = -1;
-        SQLiteDatabase db = this.getWritableDatabase();
+        sqLiteDatabase = this.getWritableDatabase();
         for( VolumeEntity volumeEntity : objects) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(ID, volumeEntity.getId());
@@ -69,9 +70,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(TIMESTAMP, volumeEntity.getTimestamp().toString());
             contentValues.put(FACILITY, volumeEntity.getFacility());
             contentValues.put(FACILITY_TYPE, volumeEntity.getFacility_type());
-            result = db.insert(TABLE_NAME, null, contentValues);
+            result = sqLiteDatabase.insert(TABLE_NAME, null, contentValues);
         }
         Log.d(TAG, "insertData: result - " + String.valueOf(result));
+        return result > 0 ? true : false;
+    }
+
+    public boolean clearDB() {
+        Log.d(TAG, "clearDB: Started");
+        sqLiteDatabase = this.getWritableDatabase();
+        Integer result = sqLiteDatabase.delete(TABLE_NAME, "1", null);
+        Log.d(TAG, "clearDB: result: " + String.valueOf(result));
+
         return result > 0 ? true : false;
     }
 }

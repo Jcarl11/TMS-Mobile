@@ -4,11 +4,12 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.tms"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -38,5 +39,6 @@ dependencies {
     implementation 'com.jakewharton:butterknife:10.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
     implementation 'com.github.d-max:spots-dialog:1.1@aar'
-    implementation 'com.jjoe64:graphview:4.2.2'
+    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
+    implementation 'com.android.support:multidex:1.0.3'
 }

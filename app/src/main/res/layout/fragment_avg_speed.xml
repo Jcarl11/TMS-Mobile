@@ -11,12 +11,13 @@
         android:id="@+id/avgspeed_period"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Period"/>
+        android:hint="@string/period"/>
 
-    <com.jjoe64.graphview.GraphView
-        android:id="@+id/avgspeed_graph"
+    <com.anychart.AnyChartView
+        android:id="@+id/chart_view"
         android:layout_width="match_parent"
-        android:layout_height="300dp" />
+        android:layout_height="450dp"
+        />
 
 
 </LinearLayout>

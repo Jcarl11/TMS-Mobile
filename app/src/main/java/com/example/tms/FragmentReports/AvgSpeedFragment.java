@@ -17,14 +17,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import com.anychart.AnyChart;
+import com.anychart.AnyChartView;
 import com.example.tms.DatabaseHelper;
 import com.example.tms.Entities.AvgReportEntity;
-import com.example.tms.InitializeGraph;
+import com.example.tms.InitializeLineGraph;
 import com.example.tms.Period;
 import com.example.tms.R;
 import com.example.tms.TrafficSpeedDAO;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.DataPoint;
 import com.weiwangcn.betterspinner.library.BetterSpinner;
 
 import java.util.ArrayList;
@@ -34,30 +34,24 @@ import java.util.ArrayList;
  */
 public class AvgSpeedFragment extends Fragment {
     private static String TAG = AvgSpeedFragment.class.getCanonicalName();
-    int index = 0;
     SQLiteDatabase db;
     TrafficSpeedDAO trafficSpeedDAO;
     private static String[] PERIODS = {"All", "Last 7 days", "Last 30 days"};
     ArrayList<AvgReportEntity> reports;
-    ArrayList<DataPoint> yValue;
-    ArrayList<String> xValue;
-    InitializeGraph initializeGraph;
-    @BindView(R.id.avgspeed_graph) GraphView avgspeed_graph;
+    InitializeLineGraph initializeLineGraph;
     @BindView(R.id.avgspeed_period) BetterSpinner avgspeed_period;
-
-
-
+    @BindView(R.id.chart_view) AnyChartView chart_view;
     public AvgSpeedFragment() {}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_avg_speed, container, false);
         ButterKnife.bind(this, view);
+        initializeLineGraph = new InitializeLineGraph(chart_view);
         db = new DatabaseHelper(getContext()).getWritableDatabase();
         trafficSpeedDAO = new TrafficSpeedDAO(db);
         avgspeed_period.setOnItemClickListener(spinnerListener());
         avgspeed_period.setAdapter(spinnerAdapter());
-        initializeGraph = new InitializeGraph(avgspeed_graph);
 
         return view;
     }
@@ -78,48 +72,18 @@ public class AvgSpeedFragment extends Fragment {
                 if(position == 0) {
                     Log.d(TAG, "onItemClick: " + (String)parent.getItemAtPosition(position));
                     reports = trafficSpeedDAO.getAvgSpeedReport(Period.ALL);
-                    yValue = new ArrayList<>();
-                    xValue = new ArrayList<>();
-                    index = 0;
-                    reports.size();
-                    reports.forEach(report -> {
-                        yValue.add(new DataPoint(index, report.getAvg()));
-                        xValue.add(report.getDate());
-                        index++;
-                    });
-                    initializeGraph.setxAxisValues(xValue);
-                    initializeGraph.setyAxisValues(yValue);
-                    initializeGraph.initialize();
+                    initializeLineGraph.initializeChart();
+                    initializeLineGraph.displayDataSpeed(reports);
                 } else if(position == 1){
                     Log.d(TAG, "onItemClick: " + (String)parent.getItemAtPosition(position));
                     reports = trafficSpeedDAO.getAvgSpeedReport(Period.LAST_7_DAYS);
-                    yValue = new ArrayList<>();
-                    xValue = new ArrayList<>();
-                    index = 0;
-                    reports.size();
-                    reports.forEach(report -> {
-                        yValue.add(new DataPoint(index, report.getAvg()));
-                        xValue.add(report.getDate());
-                        index++;
-                    });
-                    initializeGraph.setxAxisValues(xValue);
-                    initializeGraph.setyAxisValues(yValue);
-                    initializeGraph.initialize();
+                    initializeLineGraph.initializeChart();
+                    initializeLineGraph.displayDataSpeed(reports);
                 } else if(position == 2){
                     Log.d(TAG, "onItemClick: " + (String)parent.getItemAtPosition(position));
                     reports = trafficSpeedDAO.getAvgSpeedReport(Period.LAST_30_DAYS);
-                    yValue = new ArrayList<>();
-                    xValue = new ArrayList<>();
-                    index = 0;
-                    reports.size();
-                    reports.forEach(report -> {
-                        yValue.add(new DataPoint(index, report.getAvg()));
-                        xValue.add(report.getDate());
-                        index++;
-                    });
-                    initializeGraph.setxAxisValues(xValue);
-                    initializeGraph.setyAxisValues(yValue);
-                    initializeGraph.initialize();
+                    initializeLineGraph.initializeChart();
+                    initializeLineGraph.displayDataSpeed(reports);
                 }
             }
         };
