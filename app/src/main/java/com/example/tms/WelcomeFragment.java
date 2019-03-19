@@ -20,7 +20,7 @@ public class WelcomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_welcome, container, false);
-        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Welome");
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Welcome");
         return view;
     }
 

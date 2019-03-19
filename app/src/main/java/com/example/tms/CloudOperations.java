@@ -41,7 +41,7 @@ public class CloudOperations {
                 volumeEntity.setId(object.getString(ID));
                 volumeEntity.setFacility(object.getString(FACILITY));
                 volumeEntity.setFacility_type(object.getString(FACILITY_TYPE));
-                volumeEntity.setSpeed((Double) object.getNumber(SPEED));
+                volumeEntity.setSpeed(object.getNumber(SPEED).doubleValue());
                 volumeEntity.setCount((Integer) object.getNumber(COUNT));
                 volumeEntity.setTimestamp(object.getString(TIMESTAMP));
 
