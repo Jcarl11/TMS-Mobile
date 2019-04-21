@@ -31,6 +31,8 @@ public class CloudOperations {
         Log.d(TAG, "getAll: started");
         ArrayList<VolumeEntity> volumeEntityArrayList = new ArrayList<>();
         ParseQuery<ParseObject> query = ParseQuery.getQuery("RAWDATA");
+        query.orderByAscending("timestamp");
+        query.setLimit(1000);
         try {
             List<ParseObject> result = query.find();
             Log.d(TAG, "getAll: result size: " + result.size());

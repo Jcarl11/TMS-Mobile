@@ -32,7 +32,8 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  */
 public class VolumeFragment extends Fragment {
-    private static String TAG = VolumeFragment.class.getCanonicalName();
+    private static final String TAG = "VolumeFragment";
+
     SQLiteDatabase db;
     TrafficVolumeDAO trafficVolumeDAO;
     private static String[] PERIODS = {"All", "Last 7 days", "Last 30 days"};
@@ -72,6 +73,7 @@ public class VolumeFragment extends Fragment {
                     db = new DatabaseHelper(getContext()).getWritableDatabase();
                     trafficVolumeDAO = new TrafficVolumeDAO(db);
                     ArrayList<VolumeReportEntity> reports = trafficVolumeDAO.getVolumeReport(Period.ALL);
+                    Log.d(TAG, "onItemClick: reports size: " + String.valueOf(reports.size()));
                     InitializeLineGraph initializeLineGraph = new InitializeLineGraph(any_chart_view);
                     initializeLineGraph.initializeChart();
                     initializeLineGraph.displayData(reports);
@@ -80,6 +82,7 @@ public class VolumeFragment extends Fragment {
                     db = new DatabaseHelper(getContext()).getWritableDatabase();
                     trafficVolumeDAO = new TrafficVolumeDAO(db);
                     ArrayList<VolumeReportEntity> reports = trafficVolumeDAO.getVolumeReport(Period.LAST_7_DAYS);
+                    Log.d(TAG, "onItemClick: reports size: " + String.valueOf(reports.size()));
                     InitializeLineGraph initializeLineGraph = new InitializeLineGraph(any_chart_view);
                     initializeLineGraph.initializeChart();
                     initializeLineGraph.displayData(reports);
@@ -88,6 +91,7 @@ public class VolumeFragment extends Fragment {
                     db = new DatabaseHelper(getContext()).getWritableDatabase();
                     trafficVolumeDAO = new TrafficVolumeDAO(db);
                     ArrayList<VolumeReportEntity> reports = trafficVolumeDAO.getVolumeReport(Period.LAST_30_DAYS);
+                    Log.d(TAG, "onItemClick: reports size: " + String.valueOf(reports.size()));
                     InitializeLineGraph initializeLineGraph = new InitializeLineGraph(any_chart_view);
                     initializeLineGraph.initializeChart();
                     initializeLineGraph.displayData(reports);
