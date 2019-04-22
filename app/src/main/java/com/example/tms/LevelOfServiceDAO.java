@@ -10,11 +10,7 @@ import java.util.ArrayList;
 
 public class LevelOfServiceDAO {
 
-    private static final String TAG = LevelOfServiceDAO.class.getCanonicalName();
-    private static String COMMAND = "select strftime('%H', timestamp) HOUR, \n" +
-            "SUM(COUNT) VOLUME, \n" +
-            "round(AVG(SPEED), 2) AVG_SPEED, \n" +
-            "FACILITY, FACILITY_TYPE from rawdata group by HOUR order by timestamp asc;";
+    private static final String TAG = "LevelOfServiceDAO";
     SQLiteDatabase db;
 
     public LevelOfServiceDAO(SQLiteDatabase db) {
@@ -22,8 +18,11 @@ public class LevelOfServiceDAO {
         this.db = db;
     }
 
-    public ArrayList<LevelOfServiceEntity> getLevelOfServiceReport() {
+    public ArrayList<LevelOfServiceEntity> getLevelOfServiceReport(String period) {
+        String COMMAND = "select strftime('%H', timestamp) HOUR, SUM(COUNT) VOLUME, ROUND(AVG(SPEED), 2) AVG_SPEED, FACILITY, FACILITY_TYPE FROM RAWDATA WHERE strftime('%Y-%m-%d', timestamp)= '"+period+"' group by HOUR order by timestamp asc";
+        Log.d(TAG, "getLevelOfServiceReport: " + COMMAND);
         ArrayList<LevelOfServiceEntity> levelOfServiceEntities = new ArrayList<>();
+
         Cursor cursor = db.rawQuery(COMMAND, null);
         if(cursor.getCount() > 0) {
             while(cursor.moveToNext()) {
@@ -35,6 +34,7 @@ public class LevelOfServiceDAO {
                 levelOfServiceEntity.setFacilityType(cursor.getString(4));
                 levelOfServiceEntity.setLvlOfService(Utility.getLevelOfService(levelOfServiceEntity.getAvgSpeed()));
                 levelOfServiceEntities.add(levelOfServiceEntity);
+                Log.d(TAG, String.format("%s, %s, %s", levelOfServiceEntity.getHour(), String.valueOf(levelOfServiceEntity.getAvgSpeed()), levelOfServiceEntity.getFacility()));
             }
         } else {
             Log.d(TAG, "getLevelOfServiceReport: cursor empty");

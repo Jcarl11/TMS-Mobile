@@ -22,7 +22,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TIMESTAMP = "TIMESTAMP";
     private static final String FACILITY = "FACILITY";
     private static final String FACILITY_TYPE = "FACILITY_TYPE";
-    private static final String COMMAND_CREATE = "CREATE TABLE %s (" +
+    private static final String COMMAND_CREATE = "CREATE TABLE IF NOT EXISTS %s (" +
             "%s VARCHAR(50) PRIMARY KEY, " +
             "%s INT, " +
             "%s DECIMAL(4, 2)," +
@@ -32,7 +32,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COMMAND_DROP = "DROP TABLE IF EXISTS %s";
     SQLiteDatabase sqLiteDatabase;
     public DatabaseHelper(@Nullable Context context) {
-        super(context, DB_NAME, null, 1);
+        super(context, DB_NAME, null, 2);
         Log.d(TAG, "DatabaseHelper: Initialized");
     }
 
